@@ -21,6 +21,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 const MongoStore = require('connect-mongo'); // Import directly
+
 app.use(
     session({
       secret: process.env.SESSION_SECRET,
@@ -52,17 +53,18 @@ app.use((req,res,next)=>{
    res.locals.messages=req.flash();
    next();
 })
-mongoose.connect(process.env.MONGO_URI, {
-    dbName: process.env.DB_NAME,
-    // useNewUr1Parser: true,
-    // useUnifiedTop010gy: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
-}).then(() => {console.log('connected');
-app.listen(PORT, () => console.log(`RUNNING`));
-})
-    .catch(err => console.log(err.message));
 
+const mongoUri = process.env.MONGO_URI
+
+
+mongoose.connect(mongoUri).then(() => {
+  app.listen(PORT,()=>{
+    console.log('running');
+  })
+  console.log('Connected to database!');
+}).catch(err => {
+  console.error('Error connecting to the database:', err.message);
+});
 
 app.use('/', require('./routes/index.route'));
 app.use('/auth',require('./routes/auth.route'))
