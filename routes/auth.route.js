@@ -21,7 +21,7 @@ router.post('/login',ensureNotAuthenticated,passport.authenticate('local',{
 }))
 router.post('/register',ensureNotAuthenticated,[
     body('email').trim().isEmail().withMessage('Email must be a valid email').normalizeEmail().toLowerCase(),
-    body('password').trim().isLength(2).withMessage('Password should be of minimum length 2 '),
+    body('password').trim().isLength(8).withMessage('Password should be of minimum length 8 '),
     body('password2').custom((value,{req})=>{
         if (value != req.body.password){
             throw new Error('Passwords do not match')
